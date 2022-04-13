@@ -1,0 +1,60 @@
+{% extends "inc/base.html" %}
+{% load static %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+      <div class="me-auto">
+          <a class="navbar-brand d-flex" href="#">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                  class="bi bi-code-square me-2" viewBox="0 0 16 16">
+                  <path
+                      d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path
+                      d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
+              </svg>
+              <div>AskMilchenko</div>
+          </a>
+      </div>
+
+      <div class="container-fluid">
+          <form class="d-flex">
+              <input class="form-control mr-sm-2 me-2" style="width: 30%;" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+      </div>
+
+      <button type="button" class="btn btn-light btn-sm" href="{% static "login.html" %}">Sign in</button>
+      <button type="button" class="btn btn-dark btn-sm" href="{% static "sign-up.html" %}">Sign up</button>
+
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+  <div class="row gx-5"></div>
+    <div class="col-9">
+      <h2 class="mt-2" style="padding-left: 20px">Questions</h2>
+
+      {% for question in questions %}
+        {% include "inc/question-template.html" %}
+      {% endfor %}
+      
+    </div>
+
+    <div class="col-3">
+      <h2 class="mt-2">
+        Tags
+      </h2>
+      <div class="mt-4ß">
+        <button type="button" class="btn btn-light">Python</button>
+        <button type="button" class="btn btn-light">C</button>
+        <button type="button" class="btn btn-light">C++</button>
+        <button type="button" class="btn btn-light">Django</button>
+        <button type="button" class="btn btn-light">Go</button>
+        <button type="button" class="btn btn-light">Linux</button>
+        <button type="button" class="btn btn-light">macOS</button>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
