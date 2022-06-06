@@ -11,7 +11,7 @@
                     <path
                         d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
                 </svg>
-                <div>AskMilchenko</div>
+                <div class="active">AskMilchenko</div>
             </a>
         </div>
 
@@ -22,8 +22,25 @@
             </form>
         </div>
 
-        <a type="button" class="btn btn-light btn-sm" href="{% url "auth" %}">Sign in</a>
-        <a type="button" class="btn btn-dark btn-sm" href="{% url "register" %}">Sign up</a>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <button class="btn btn-primary" href="#">Ask</button>
+            </div>
+        </div>
+
+
+        <nav class="nav flex-column" style="justify-content: center;">
+            <a class="nav-link active" style="padding: 0px 15px" href="#">Settings</a>
+            <a class="nav-link active" style="padding: 0px 15px" href="{% url "index" %}">Log out</a>
+          </nav>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+            class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+            <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+        </svg>
+        <div class="me-2">Username</div>
 
     </div>
 </nav>
