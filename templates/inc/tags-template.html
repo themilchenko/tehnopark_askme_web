@@ -1,0 +1,7 @@
+{% load static %}
+
+<div class="mt-4">
+    {% for tag in tags %}
+      <a type="button" class="btn btn-light me-2 mb-2" href="{% url 'tag' tag.id %}"> {{ tag }} </a>
+    {% endfor %}
+</div>

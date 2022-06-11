@@ -1,17 +1,11 @@
 {% load static %}
-
 <!doctype html>
 <html lang="en" class="h-100">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author"
-              content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-        <meta name="generator" content="Hugo 0.88.1">
+        <meta charset="utf-8"/>
         <title>AskMilchenko</title>
-        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-        <link rel="stylesheet" href="{% static "css/main.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+        <link rel="stylesheet" href="{% static "css/main.css" %}"/>
         <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -28,25 +22,23 @@
         }
         </style>
     </head>
-    
     <body class="d-flex flex-column h-100">
         {% block navbar %}
         {% endblock navbar %}
-        <!-- Begin page content -->
         <main class="flex-shrink-0">
             <div class="container">
                 <div class="row gx-5">
                     {% block content %}
                     {% endblock content %}
                 </div>
-            </div>    
+            </div>
         </main>
-            <footer class="footer mt-auto py-3 bg-light">
-                <div class="container">
-                    <span class="text-muted">Place sticky footer content here.</span>
-                </div>
-            </footer>
-            <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
-            </script>
+        <footer class="footer mt-auto py-3 bg-light">
+            <div class="container">
+                <span class="text-muted">Place sticky footer content here.</span>
+            </div>
+        </footer>
+        <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+        </script>
     </body>
 </html>

@@ -56,6 +56,8 @@
   {% for question in questions %}
     {% include "inc/question-template.html" %}
   {% endfor %}
+
+  {% include "inc/paginator.html" %}
 </div>
 
 <div class="col-3">
@@ -63,13 +65,7 @@
     Tags
   </h2>
   <div class="mt-4ß">
-    <button type="button" class="btn btn-light">Python</button>
-    <button type="button" class="btn btn-light">C</button>
-    <button type="button" class="btn btn-light">C++</button>
-    <button type="button" class="btn btn-light">Django</button>
-    <button type="button" class="btn btn-light">Go</button>
-    <button type="button" class="btn btn-light">Linux</button>
-    <button type="button" class="btn btn-light">macOS</button>
+    {% include "inc/tags-template.html" %}
   </div>
 </div>
 </div>

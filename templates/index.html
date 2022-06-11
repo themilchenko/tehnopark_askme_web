@@ -1,36 +1,32 @@
 {% extends "inc/base.html" %}
 {% load static %}
-
 {% block navbar %}
-{% include "inc/navbar.html" %}
+    {% include "inc/navbar.html" %}
 {% endblock navbar %}
-
 {% block content %}
-  <div class="row gx-5"></div>
+    <div class="row gx-5"></div>
     <div class="col-9">
-      <h2 class="mt-2" style="padding-left: 20px">Questions</h2>
-
-      {% for question in questions %}
-        {% include "inc/question-template.html" %}
-      {% endfor %}
-
-      {% include "inc/paginator.html" %}
-      
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <h2 class="mt-2" style="padding-left: 20px">Questions</h2>
+            </li>
+            <li class="list-inline-item">
+                <div class="d-flex" style="margin-left: 30rem;">
+                    <a type="button"
+                       class="btn btn-success me-2 mb-2"
+                       href="{% url 'new' %}">New questions</a>
+                    <a type="button" class="btn btn-danger me-2 mb-2" href="{% url 'hot' %}">Hot questions</a>
+                </div>
+            </li>
+        </ul>
+        {% for question in page_obj %}
+            {% include "inc/question-template.html" %}
+        {% endfor %}
+        {% include "inc/paginator.html" %}
     </div>
-
     <div class="col-3">
-      <h2 class="mt-2">
-        Tags
-      </h2>
-      <div class="mt-4">
-        <button type="button" class="btn btn-light">Python</button>
-        <button type="button" class="btn btn-light">C</button>
-        <button type="button" class="btn btn-light">C++</button>
-        <button type="button" class="btn btn-light">Django</button>
-        <button type="button" class="btn btn-light">Go</button>
-        <button type="button" class="btn btn-light">Linux</button>
-        <button type="button" class="btn btn-light">macOS</button>
-      </div>
+        <h2 class="mt-2">Tags</h2>
+        <div class="mt-4">{% include "inc/tags-template.html" %}</div>
     </div>
-  </div>
+</div>
 {% endblock content %}

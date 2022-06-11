@@ -1,4 +1,4 @@
-{% load static  %}
+{% load static %}
 <div class="question d-flex">
     <div class="left-side me-3">
         <img class="question-avatar rounded mx-auto d-block"
@@ -55,11 +55,7 @@
         </div>
         <ul class="list-inline text-end mt-2">
             <li class="list-inline-item">
-                <a type="button"
-                   class="btn">Author: {{ question.user }}</a>
-            </li>
-            <li class="list-inline-item">
-                <a type="button"
+                <button type="button"
                         class="btn btn-light"
                         id="comment-button"
                         style="margin: auto">
@@ -73,7 +69,7 @@
                         <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                     </svg>
                     Answers: {{ question.answers_count }}
-                  </a>
+                </button>
             </li>
             <li class="list-inline-item">
                 <a type="button"
