@@ -25,15 +25,37 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
         </div>
-        <a type="button"
-           class="btn btn-light"
-           style="white-space: nowrap;
-                  text-align: center;"
-           href="{% url "auth" %}">Sign in</a>
-        <a type="button"
-           class="btn btn-dark"
-           style="white-space: nowrap;
-                  text-align: center;"
-           href="{% url "register" %}">Sign up</a>
+        {% if user.profile.is_authenticated %}
+            <div class="collapse navbar-collapse me-2" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="btn btn-primary" href="{% url "ask" %}">Ask</a>
+                </div>
+            </div>
+            <nav class="nav flex-column" style="justify-content: center;">
+                <a class="nav-link active"
+                   style="padding: 0px 15px"
+                   href="{% url "settings" %}">Settings</a>
+                <a class="nav-link active"
+                   style="padding: 0px 15px"
+                   href="{% url "logout" %}">Log out</a>
+            </nav>
+            <img src="{{ user.avatar.url }}"
+                 alt=""
+                 width=50
+                 height=50
+                 class="rounded-circle me-2"/>
+            <div class="me-2">{{ user }}</div>
+        {% else %}
+            <a type="button"
+               class="btn btn-light"
+               style="white-space: nowrap;
+                      text-align: center;"
+               href="{% url "auth" %}">Sign in</a>
+            <a type="button"
+               class="btn btn-dark"
+               style="white-space: nowrap;
+                      text-align: center;"
+               href="{% url "register" %}">Sign up</a>
+        {% endif %}
     </div>
 </nav>

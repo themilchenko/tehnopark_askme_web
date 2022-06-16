@@ -38,6 +38,14 @@ def create_user_db(name):
     return Profile.objects.create(profile=user)
 
 
+def create_tag(tag_names, title):
+    result = list()
+    for i in tag_names:
+        result.append(Tag.objects.create(
+            color=generate_color(), name=i, question_title=title))
+    return result
+
+
 def create_tag_db(num, question_title):
     result = list()
     for i in range(num):

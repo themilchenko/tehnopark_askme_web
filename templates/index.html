@@ -1,8 +1,10 @@
 {% extends "inc/base.html" %}
 {% load static %}
+
 {% block navbar %}
     {% include "inc/navbar.html" %}
 {% endblock navbar %}
+
 {% block content %}
     <div class="row gx-5"></div>
     <div class="col-9">
@@ -19,10 +21,10 @@
                 </div>
             </li>
         </ul>
-        {% for question in page_obj %}
+        {% for question in question_page_obj %}
             {% include "inc/question-template.html" %}
         {% endfor %}
-        {% include "inc/paginator.html" %}
+        {% include "inc/question-paginator.html" %}
     </div>
     <div class="col-3">
         <h2 class="mt-2">Tags</h2>

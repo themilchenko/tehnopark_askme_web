@@ -1,86 +1,88 @@
 {% extends "inc/base.html" %}
 {% load static %}
-
-
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
-        <div class="me-auto">
-            <a class="navbar-brand d-flex" href="{% url "authorized" %}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                    class="bi bi-code-square me-2" viewBox="0 0 16 16">
-                    <path
-                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                    <path
-                        d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
-                </svg>
-                <div class="active">AskMilchenko</div>
-            </a>
-        </div>
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-            <form class="d-flex">
-                <input class="form-control mr-sm-2 me-2" style="width: 30%;" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
-
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <button class="btn btn-primary" href="{% url "ask" %}">Ask</button>
+            <div class="me-auto">
+                <a class="navbar-brand d-flex" href="{% url "index" %}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="25"
+                         height="25"
+                         fill="currentColor"
+                         class="bi bi-code-square me-2"
+                         viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+                    </svg>
+                    <div class="active">AskMilchenko</div>
+                </a>
             </div>
+            <div class="collapse navbar-collapse me-2" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="btn btn-primary" href="{% url "ask" %}">Ask</a>
+                </div>
+            </div>
+            <img src="{{ user.url }}"
+                 alt=""
+                 width=
+                 50
+                 height=
+                 50
+                 class="rounded-circle me-2"/>
+            <div class="me-2">{{ request.user }}</div>
         </div>
-
-
-        <nav class="nav flex-column" style="justify-content: center;">
-            <a class="nav-link active" style="padding: 0px 15px" href="{% url "index" %}">Log out</a>
-          </nav>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-            class="bi bi-person-circle me-2" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-            <path fill-rule="evenodd"
-                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-        </svg>
-        <div class="me-2">Username</div>
-
-    </div>
-</nav>
+    </nav>
 {% endblock navbar %}
-
-
 {% block content %}
-<form class="row gx-3 align-items-center mt-2">
-    <h1 style="margin-bottom: 40px;">User settings</h1>
-
-    <form>
-        <div class="form-group row mb-4">
-            <label for="colFormLabel" class="col-sm-1 col-form-label">Name</label>
-            <div class="col-sm-5">
-              <input type="name" class="form-control" id="colFormLabel" value="Vasya">
+    <div class="row gx-3 align-items-center mt-2">
+        <h1 style="margin-bottom: 40px;">User settings</h1>
+        {% if msg %}
+            <p class="text-success">
+                {{ msg }}
+            </p>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul class="list-inline">
+                <li class="list-item">
+                    <div class="form-group row mb-4">
+                        <div class="name-item col-sm-12 col-3">
+                            <label for="formGroupExampleInput" class="form-label">Username</label>
+                            {{ form.username }}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-item">
+                    <div class="form-group row mb-4">
+                        <div class="name-item col-sm-12 col-3">
+                            <label for="formGroupExampleInput" class="form-label">Name</label>
+                            {{ form.first_name }}
+                        </div>
+                    </div>
+                </li>
+                <div class="form-group row mb-4">
+                    <div class="name-item col-sm-12 col-3">
+                        <label for="formGroupExampleInput" class="form-label">Surname</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+                <div class="form-group row mb-4">
+                    <div class="name-item col-sm-12 col-3">
+                        <label for="formGroupExampleInput" class="form-label">Email</label>
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div>
+                    <label for="formFile" class="col-form-label">Change avatar image</label>
+                    <div >
+                        <img src="{{ user.url }}" width=50 height=50 class="profile-pic">
+                        {{ form.avatar }}
+                    </div>
+                </div>
+            </ul>
+            <div>
+                <button type="submit" class="btn btn-primary mt-4">Save</button>
             </div>
-        </div>
-        <div class="form-group row mb-4">
-            <label for="colFormLabel" class="col-sm-1 col-form-label">Surname</label>
-            <div class="col-sm-5">
-              <input type="surname" class="form-control" id="colFormLabel" value="Pupkin">
-            </div>
-        </div>
-        <div class="form-group row mb-4">
-            <label for="colFormLabel" class="col-sm-1 col-form-label">Email</label>
-            <div class="col-sm-5">
-              <input type="email" class="form-control" id="colFormLabel" value="ex@example.com">
-            </div>
-        </div>
-        <div class="mb-2">
-            <label for="formFile" class="col-sm-2 col-form-label">Change avatar image</label>
-            <div class="col-sm-5">
-                <input class="form-control" type="file" id="formFile">
-            </div>
-        </div>
-        <div class="col-12">
-            <a type="submit" class="btn btn-primary mt-4" href="{% url "authorized" %}">Save</a>
-        </div>
-    </form>
-
+        </form>
+    </div>
 {% endblock content %}

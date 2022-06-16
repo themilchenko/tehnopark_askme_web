@@ -18,38 +18,27 @@
                         <div>AskMilchenko</div>
                     </a>
                 </div>
-                {% comment %} <form class="d-flex">
-                    <input class="form-control me-2"
-                           type="search"
-                           placeholder="Search"
-                           aria-label="Search"/>
-                    <button class="btn btn-outline-primary" type="submit">Search</button>
-                </form> {% endcomment %}
             </div>
         </nav>
     </nav>
 {% endblock navbar %}
 {% block content %}
-    <form class="row gx-3 align-items-center mt-2">
+    <div class="row gx-3 align-items-center mt-2">
         <h1>Registration</h1>
-        <div class="block">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.errors }}
             <ul class="list-inline">
                 <li class="list-inline-item">
                     <div class="name-item col-sm-12 col-3">
                         <label for="formGroupExampleInput" class="form-label">Name</label>
-                        <input type="text"
-                               class="form-control"
-                               id="formGroupExampleInput"
-                               placeholder="Vasya"/>
+                        {{ form.first_name }}
                     </div>
                 </li>
                 <li class="list-inline-item">
                     <div class="surname-item col-sm-12 col-3">
                         <label for="formGroupExampleInput" class="form-label">Surname</label>
-                        <input type="text"
-                               class="form-control"
-                               id="formGroupExampleInput"
-                               placeholder="Pupkin"/>
+                        {{ form.last_name }}
                     </div>
                 </li>
                 <li class="list-inline-item">
@@ -57,31 +46,22 @@
                         <label for="formGroupExampleInput" class="form-label">Nickname</label>
                         <div class="input-group">
                             <div class="input-group-text">@</div>
-                            <input type="text"
-                                   class="form-control"
-                                   id="autoSizingInputGroup"
-                                   placeholder="Username"/>
+                            {{ form.username }}
                         </div>
                     </div>
                 </li>
             </ul>
             <div class="mb-2 mt-4 email">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-5">
-                    <input type="email" class="form-control" id="inputEmail3"/>
-                </div>
+                <div class="col-sm-5">{{ form.email }}</div>
             </div>
             <div class="mb-2 mt-4">
                 <label for="inputPassword4" class="col-sm-2 col-form-label">Enter the password</label>
-                <div class="col-sm-5">
-                    <input type="password" class="form-control" id="inputPassword4"/>
-                </div>
+                <div class="col-sm-5">{{ form.password1 }}</div>
             </div>
             <div class="mb-2 mt-4">
                 <label for="inputPassword4" class="col-sm-2 col-form-label">Enter the password again</label>
-                <div class="col-sm-5">
-                    <input type="password" class="form-control" id="inputPassword4"/>
-                </div>
+                <div class="col-sm-5">{{ form.password2 }}</div>
             </div>
             <div class="mb-2 mt-4">
                 <label for="formFile" class="col-sm-2 col-form-label">Choose avatar image</label>
@@ -90,10 +70,8 @@
                 </div>
             </div>
             <div class="col-12">
-                <a type="submit"
-                   class="btn btn-primary mt-4"
-                   href="{% url "authorized" %}">Sign up</a>
+                <button type="submit" class="btn btn-primary mt-4">Sign up</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 {% endblock content %}

@@ -1,22 +1,26 @@
 from argparse import _MutuallyExclusiveGroup
+import profile
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class QuestionManager(models.Manager):
     def get_tag(self, tag):
-        return Question.objects.filter(tag__name=tag)
+        return Question.objects.filter(tag_name=tag)
 
 
 class ProfileManager(models.Manager):
-    def get_user(self, user):
-        return Profile.objects.get(username=user)
+    def get_avatar(self, username):
+        return Profile.objects.get(profile=username).avatar
+
+    def get_user(self, username):
+        return Profile.objects.get(profile=username)
 
 
 class Profile(models.Model):
     profile = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, related_name='User')
-    avatar = models.ImageField(null=True, blank=True)
+    avatar = models.ImageField(default='profile-default.png', null=True, blank=True)
 
     objects = ProfileManager()
 
@@ -34,7 +38,7 @@ class Like(models.Model):
 
 class Tag(models.Model):
     color = models.CharField(max_length=1, null=True, blank=True, default='g')
-    name = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=32)
     question_title = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
@@ -49,11 +53,12 @@ class Question(models.Model):
     ]
 
     title_text = models.CharField(max_length=64, null=False, blank=True)
-    question_text = models.TextField()
+    question_text = models.TextField(unique=True)
     user = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name='user')
     tags = models.ManyToManyField(Tag, blank=True, related_name='tags')
-    answers_count = models.IntegerField(null=True)
+    tag_field = models.CharField(max_length=64, blank=True, null=True)
+    answers_count = models.IntegerField(null=True, default=0)
 
     status = models.CharField(max_length=1, choices=STATUS, default='D')
 
@@ -81,6 +86,7 @@ class Answer(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     answer_text = models.TextField(default='')
     published_date = models.DateField()
+    is_correct = models.BooleanField(default=False)
 
     def get_question_title(self):
         return self.question.title_text

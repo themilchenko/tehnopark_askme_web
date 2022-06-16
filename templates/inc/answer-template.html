@@ -32,6 +32,12 @@
         </div>
     </div>
     <div class="me-2 flex-fill">
+        <h1 style="overflow: hidden;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 3;
+                  -webkit-box-orient: vertical;">
+            {{ item.user }}
+    </h1>
         <p style="overflow: hidden;
                   display: -webkit-box;
                   -webkit-line-clamp: 3;
@@ -53,5 +59,8 @@
                 {% endfor %}
             </div>
         </li>
+        <div class="form-check">
+            <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1"/>
+        </div>
     </div>
 </div>
