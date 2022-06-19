@@ -59,20 +59,34 @@ def create_like(likes_num, dislikes_num):
 
 
 def create_question_answers_db(num):
+    for i in range(num * 10):
+        create_user_db(random_string(3, 10))
+
     for i in range(num):
-        question = Question.objects.create(title_text=random_string(3, 10), 
-                                           question_text=random_string(100, 300), 
-                                           user=create_user_db(random_string(3, 10)), 
-                                           answers_count=random.randint(3, 33), 
-                                           like=create_like(random.randint(0, 100), random.randint(0, 50)), 
+        question = Question.objects.create(title_text=random_string(3, 10),
+                                           question_text=random_string(
+                                               100, 300),
+                                           user=Profile.objects.all()[random.randint(
+                                               0, Profile.objects.all().count() - 1)],
+                                           answers_count=random.randint(3, 33),
                                            published_date=random_date("2022-1-1", date.today().strftime("%Y-%m-%d"), random.random()))
-        question.tags.set(create_tag_db(random.randint(3, 5), question.title_text))
+        question.tags.set(create_tag_db(
+            random.randint(3, 10), question.title_text))
+        
+        for j in range(random.randint(0, User.objects.all().count())):
+            random_index = random.randint(0, 1)
+            if random_index == 0:
+                Like.objects.create(is_like=True, is_dislike=False, user=User.objects.all()[j], question=question)
+            else:
+                Like.objects.create(is_dislike=True, is_like=True, user=User.objects.all()[j], question=question)
+
+        question.likes_count = Like.objects.get_likes(Question.objects.get(title_text=question.title_text))
+        question.dislikes_count = Like.objects.get_dislikes(Question.objects.get(title_text=question.title_text))
+        question.save()
 
         for j in range(random.randint(5, 25)):
             Answer.objects.create(question=question, user=question.user, answer_text=random_string(
                 20, 30), published_date=date.today().strftime("%Y-%m-%d"))
-
-        
 
         # counting num of answers
         for item in Question.objects.all():
@@ -81,13 +95,13 @@ def create_question_answers_db(num):
 
         # determining of popular state
         for item in Question.objects.all():
-            if item.get_likes() + item.get_dislikes() > 100:
+            if Like.objects.get_likes(item) + Like.objects.get_dislikes(item) > 100:
                 item.status = 'P'
                 item.save()
 
         # determining of new state
         for item in Question.objects.all():
-            if abs(item.published_date.month == date.today().month ):
+            if abs(item.published_date.month == date.today().month):
                 item.status = 'N'
                 item.save()
 
@@ -98,3 +112,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         create_question_answers_db(options['question_count'][0])
+        print('DataBase was created succsessfully!')

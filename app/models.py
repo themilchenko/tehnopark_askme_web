@@ -1,5 +1,6 @@
 from argparse import _MutuallyExclusiveGroup
 import profile
+from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -7,6 +8,14 @@ from django.contrib.auth.models import User
 class QuestionManager(models.Manager):
     def get_tag(self, tag):
         return Question.objects.filter(tag_name=tag)
+
+
+class LikeManager(models.Manager):
+    def get_likes(self, question):
+        return Like.objects.filter(question=question, is_like=True).count()
+
+    def get_dislikes(self, question):
+        return Like.objects.filter(question=question, is_dislike=True).count()
 
 
 class ProfileManager(models.Manager):
@@ -20,20 +29,12 @@ class ProfileManager(models.Manager):
 class Profile(models.Model):
     profile = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, related_name='User')
-    avatar = models.ImageField(default='profile-default.png', null=True, blank=True)
+    avatar = models.ImageField(default='profile-default.png', upload_to='', null=True, blank=True)
 
     objects = ProfileManager()
 
     def __str__(self):
         return self.profile.username
-
-
-class Like(models.Model):
-    likes_count = models.IntegerField(default=0)
-    dislikes_count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return str(self.likes_count)
 
 
 class Tag(models.Model):
@@ -63,16 +64,10 @@ class Question(models.Model):
     status = models.CharField(max_length=1, choices=STATUS, default='D')
 
     published_date = models.DateField(null=True)
-    like = models.ForeignKey(
-        Like, on_delete=models.CASCADE, related_name='like', blank=True, null=True)
+    likes_count = models.IntegerField(default=0)
+    dislikes_count = models.IntegerField(default=0)
 
     objects = QuestionManager()
-
-    def get_likes(self):
-        return self.like.likes_count
-
-    def get_dislikes(self):
-        return self.like.dislikes_count
 
     def get_tags(self):
         return self.tags.all()
@@ -88,9 +83,21 @@ class Answer(models.Model):
     published_date = models.DateField()
     is_correct = models.BooleanField(default=False)
 
+    likes_count = models.IntegerField(default=0)
+    dislikes_count = models.IntegerField(default=0)
+
     def get_question_title(self):
         return self.question.title_text
 
     def get_question_text(self):
         return self.question.question_text
 
+
+class Like(models.Model):
+    is_like = models.BooleanField(default=False, null=True)
+    is_dislike = models.BooleanField(default=False, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', null=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question', null=True)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='answer', null=True)
+
+    objects = LikeManager()

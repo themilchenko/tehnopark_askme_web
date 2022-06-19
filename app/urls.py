@@ -19,7 +19,9 @@ urlpatterns = [
     path('authorized/settings/', views.user_settings, name='settings'),
     path('view-question/<int:post_id>/', views.view_question, name='view-question'),
     # path('view-question/<int:post_id>', views.view_question, name='view-question'),
-    path('<int:tag_id>', views.tag_question, name='tag')
+    path('<int:tag_id>', views.tag_question, name='tag'),
+    path('vote/', views.vote, name='like-vote'), #vote-view
+    # path('dislike-vote/', views.dislike_vote, name='dislike-vote')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

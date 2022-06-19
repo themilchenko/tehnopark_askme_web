@@ -1,10 +1,12 @@
 from datetime import date
 from django.contrib import messages
 from urllib import request
-from django.http import HttpResponse
+from django.forms import model_to_dict
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from app.management.commands.create_db import create_tag
-from app.forms import SignInForm, UpdateProfile, CreateQuestion
+from app.forms import SignInForm, UpdateProfile, CreateQuestion, UpdateUser
 from .models import Profile, Question, Tag, Answer, Like
 from django.core.paginator import Paginator
 from django.views.generic import DeleteView
@@ -101,8 +103,7 @@ def auth(request):
         else:
             messages.error(request, ('Incorrect username or password!'))
             return redirect('auth')
-    else:
-        return render(request, 'login.html')
+    return render(request, 'login.html')
 
 
 def register(request):
@@ -123,17 +124,23 @@ def register(request):
 
 
 def user_settings(request):
-    message = None
-    user = Profile.objects.get_avatar(username=request.user)
+    # form = None
+    profile = Profile.objects.get_user(request.user)
+    profile_form = UpdateProfile(instance=profile)
+    user_form = UpdateUser(instance=request.user)
+
     if request.method == 'POST':
-        form = UpdateProfile(request.POST,
-                             request.FILES,
-                             instance=request.user)
-        if form.is_valid():
-            form.save()
-            message = 'Data has been saved'
-    form = UpdateProfile(instance=request.user)
-    return render(request, 'user-settings.html', {'form': form, 'msg': message, 'user': user})
+        user_form = UpdateUser(request.POST, instance=request.user)
+        profile_form = UpdateProfile(
+            request.POST, request.FILES, instance=profile)
+        if user_form.is_valid():
+            user_form.save()
+        if profile_form.is_valid():
+            profile_form.save()
+
+    return render(request, 'user-settings.html', {'profile_form': profile_form,
+                                                  'user_form': user_form,
+                                                  'user': Profile.objects.get_avatar(username=request.user)})
 
 
 def ask_question(request):
@@ -157,8 +164,7 @@ def ask_question(request):
                                                    question_text=text,
                                                    user=user,
                                                    published_date=date.today().strftime("%Y-%m-%d"),
-                                                   status='N',
-                                                   like=Like.objects.create(likes_count=0, dislikes_count=0))
+                                                   status='N')
                 question.tags.set(create_tag(tags, title))
                 messages.success(request, "Successfully created!")
                 return redirect('view-question', question.id)
@@ -181,6 +187,8 @@ def view_question(request, post_id, answer_id=None):
                               user=Profile.objects.get_user(request.user),
                               answer_text=answer,
                               published_date=date.today().strftime("%Y-%m-%d"))
+        question.answers_count += 1
+        question.save()
 
     if request.user.is_superuser:
         Profile.objects.update_or_create(profile=request.user)
@@ -197,3 +205,81 @@ def view_question(request, post_id, answer_id=None):
                                                   'question': question,
                                                   'tags': tags_db,
                                                   'question_page_obj': page_obj})
+
+
+def vote(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            type = request.POST['type']
+            object_id = request.POST['question_id']
+            object_vote = int(request.POST['vote'])
+            obj = None
+            if type == 'question':
+                obj = Question.objects.get(id=object_id)
+            else:
+                obj = Answer.objects.get(id=object_id)
+
+            vote = None
+            if type == 'question':
+                try:
+                    vote = Like.objects.get(question=obj, user=request.user)
+                except Like.DoesNotExist:
+                    vote = Like(question=obj, user=request.user)
+                    vote.save()
+            else:
+                try:
+                    vote = Like.objects.get(answer=obj, user=request.user)
+                except Like.DoesNotExist:
+                    vote = Like(answer=obj, user=request.user)
+                    vote.save()
+
+            if object_vote == 0:
+                if vote is not None:
+                    if vote.is_like == True:
+                        vote.is_like = False
+                        obj.likes_count -= 1
+                    elif vote.is_dislike == True:
+                        vote.is_like = True
+                        vote.is_dislike = False
+                        obj.dislikes_count -= 1
+                        obj.likes_count += 1
+                    else:
+                        vote.is_like = True
+                        obj.likes_count += 1
+                    vote.save()
+                else:
+                    if type == 'question':
+                        Like.objects.create(
+                            is_like=True, user=request.user, question=obj)
+                    else:
+                        Like.objects.create(
+                            is_like=True, user=request.user, answer=obj)
+                    obj.likes_count += 1
+            else:
+                if vote is not None:
+                    if vote.is_dislike == True:
+                        vote.is_dislike = False
+                        obj.dislikes_count -= 1
+                    elif vote.is_like == True:
+                        vote.is_dislike = True
+                        vote.is_like = False
+                        obj.dislikes_count += 1
+                        obj.likes_count -= 1
+                    else:
+                        vote.is_dislike = True
+                        obj.dislikes_count += 1
+                    vote.save()
+                else:
+                    if type == 'question':
+                        Like.objects.create(
+                            is_dislike=True, is_like=False, user=request.user, question=obj)
+                    else:
+                        Like.objects.create(
+                            is_dislike=True, is_like=False, user=request.user, answer=obj)
+                    obj.dislikes_count += 1
+
+            obj.save()
+            return JsonResponse({'current_likes': obj.likes_count,
+                                 'current_dislikes': obj.dislikes_count})
+    else:
+        return redirect('auth')

@@ -18,15 +18,16 @@ class CreateQuestion(forms.ModelForm):
         fields = ['title_text', 'question_text', 'tag_field']
 
 
-class UpdateProfile(UserChangeForm):
-    username = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(required=False)
-    last_name = forms.CharField(required=False)
-    avatar = forms.ImageField(required=False)
+class UpdateUser(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ['username', 'email', 'first_name', 'last_name']
 
+
+class UpdateProfile(forms.ModelForm):
     class Meta:
         model = models.Profile
+        fields = ['avatar']
         exclude = ['user']
 
 
